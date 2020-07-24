@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from .forms import NewUserForm
+from django.contrib.auth.models import User
 # Create your views here.
 
 def homepage(request):
@@ -12,12 +13,20 @@ def homepage(request):
 def register(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
+        
+
         if form.is_valid():
-            user = form.save()
             username=form.cleaned_data.get('username')
+            error = User.objects.filter(username='nitishp').count()
+            if(error>0):
+                messages.error(request,f"Username Already Exist :{username}")
+                print("here")
+                return redirect("users:register")
+            form.save()
+            
             messages.success(request,f"New Account Created :{username}")
             login(request,user)
-            return redirect("main:homepage")
+            return redirect("users:home")
         else:
             for msg in form.error_messages:
                 messages.error(request,f"{msg}:{form.error_messages[msg]}")
@@ -25,12 +34,12 @@ def register(request):
 
     form = NewUserForm
     
-    return render(request,'user/register.html',{"form":form})
+    return render(request,'users/register.html',{"form":form})
 
 def logout_request(request):
     logout(request)
     messages.info(request,"Logged Out Successfully")
-    return redirect("main:home")
+    return redirect("users:home")
 
 def login_request(request):
     if request.method=="POST":
@@ -42,10 +51,10 @@ def login_request(request):
             if user is not None:
                 login(request,user)
                 messages.success(request,f"Logged in as:{username}")
-                return redirect("main:homepage")
+                return redirect("users:home")
             else:
                 messages.error(request,"User Not Found!")
         
     form = AuthenticationForm()
-    return render(request,"user/login.html",{"form":form})
+    return render(request,"users/login.html",{"form":form})
 

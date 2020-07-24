@@ -8,6 +8,19 @@ class NewUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+
+        user = User.objects.filter(username=username).first()
+        if not user:
+            raise ValidationError(_('You entered an invalid username.'))
+
+
+
+        self.user_cache = user
+
+        return username
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')

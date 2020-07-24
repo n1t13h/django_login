@@ -1,4 +1,8 @@
 {% extends 'users/header.html' %}
 {% block content %}
-<h1>Home Page</h1>
+{% if user.is_authenticated %}
+             <h1>User DashBoard</h1>
+            {% else %}
+            <h1>HomePage</h1>
+            {% endif %}
 {% endblock %}
