@@ -1,0 +1,20 @@
+{% extends 'users/header.html' %} {% block content %} {% load crispy_forms_tags
+%}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <form method="POST" action="/otp">
+        {% csrf_token %}
+
+        <input type="text" name="username" value="{{ username }}" readonly />
+        <input type="hidden" name="otp" value="{{ otp }}" />
+        <input type="number" name="cotp" />
+
+        <button type="submit" class="btn theme-bg">Verify</button>
+      </form>
+      <p>Don't Have an account?<a href="/register">Register</a> inseted</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
