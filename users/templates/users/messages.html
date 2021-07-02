@@ -8,7 +8,7 @@
                 <script>alertify.warning('{{message}}');</script>
 
             {% elif message.tags == 'error'%}
-             <script>alertify.warning('{{message}}');</script>
+             <script>alertify.error('{{message}}');</script>
 
             {% endif %}
         {% endfor %}
